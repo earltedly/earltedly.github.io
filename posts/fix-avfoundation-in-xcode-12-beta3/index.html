@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.74.3" />
+		<title>Fix AVFoundation in Xcode 12 beta 3 &middot; Ted Bradley&#39;s Thoughts &amp; Notes</title>
+		<link rel="shortcut icon" href="https://earltedly.github.io/images/favicon.ico">
+		<link rel="stylesheet" href="https://earltedly.github.io/css/style.css">
+		<link rel="stylesheet" href="https://earltedly.github.io/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://earltedly.github.io/css/monosocialiconsfont.css">
+		
+
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://earltedly.github.io/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://earltedly.github.io/posts'>Archive</a>
+	<a href='https://earltedly.github.io/tags'>Tags</a>
+	<a href='https://earltedly.github.io/about'>About</a>
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Fix AVFoundation in Xcode 12 beta 3
+                    </h1>
+                    <h2 class="headline">
+                    Jul 24, 2020 15:11
+                    · 63 words
+                    · 1 minute read
+                      <span class="tags">
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <p>If you&rsquo;re encountering the error <code>AVAudioSesson is unavailable on macOS</code>, you can manually fix this for now.</p>
+<p>Look in <code>/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift/AVFoundation.swiftmodule</code>. Open the files:</p>
+<ul>
+<li><code>arm64e-apple-macos.swiftinterface</code></li>
+<li><code>x86_64-apple-macos.swiftinterface</code></li>
+</ul>
+<p>Change both occurrences of:</p>
+<pre><code class="language-language-swift" data-lang="language-swift">@available(iOS 7.0, watchOS 2.0, tvOS 9.0, *)
+extension AVAudioSession.Location {
+</code></pre><p>to:</p>
+<pre><code class="language-language-swift" data-lang="language-swift">@available(OSX, unavailable)
+@available(iOS 7.0, watchOS 2.0, tvOS 9.0, *)
+extension AVAudioSession.Location {
+</code></pre><p>I&rsquo;m expecting there will be another beta soon which fixes this.</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://earltedly.github.io/js/jquery-3.3.1.min.js"></script>
+<script src="https://earltedly.github.io/js/main.js"></script>
+<script src="https://earltedly.github.io/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>
