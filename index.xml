@@ -21,7 +21,7 @@
 Look in /Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift/AVFoundation.swiftmodule. Open the files:
  arm64e-apple-macos.swiftinterface x86_64-apple-macos.swiftinterface  Change both occurrences of:
 @available(iOS 7.0, watchOS 2.0, tvOS 9.0, *) extension AVAudioSession.Location { to:
-@available(OSX, unavailable) @available(iOS 7.0, watchOS 2.0, tvOS 9.0, *) extension AVAudioSession.Location { I&amp;rsquo;m expecting there will be another beta soon which fixes this.</description>
+@available(OSX, unavailable) @available(iOS 7.0, watchOS 2.0, tvOS 9.0, *) extension AVAudioSession.Location { I&amp;rsquo;m expecting there will be another beta soon which fixes this.cd .</description>
     </item>
     
   </channel>
