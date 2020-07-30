@@ -1,14 +1,63 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Categories on Ted Bradley&#39;s Blog</title>
-    <link>https://earltedly.github.io/categories/</link>
-    <description>Recent content in Categories on Ted Bradley&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-gb</language>
+
+<rss version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on Ted Bradley&#39;s Blog</title>
+        <link>https://earltedly.github.io/categories/</link>
+        <description>Recent content in Categories on Ted Bradley&#39;s Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-gb</language>
     
-	<atom:link href="https://earltedly.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://earltedly.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+<title>No Such Module XCTest</title>
+<link>https://earltedly.github.io/posts/no-such-module-xctest/</link>
+<pubDate>Thu, 30 Jul 2020 11:30:35 +0100</pubDate>
+      
+      <guid>https://earltedly.github.io/posts/no-such-module-xctest/</guid>
+<description>&lt;h1 id=&#34;framework-importing-xctest-not-building-pre-xcode-114&#34;&gt;Framework importing XCTest not building pre-Xcode 11.4&lt;/h1&gt;
+&lt;p&gt;I recently created a Framework which builds on top of XCTest to provide various XCUIApplication and XCUElement subclasses which model the structure of our app for usage in UI tests.&lt;/p&gt;
+&lt;p&gt;Unfortunately, I ran into an issue once it hit our CI server. When compiling pre-Xcode 11.4, you get this error message:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;No such module &#39;XCTest&#39;
+	Failed to load module &#39;XCTest&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We still support Mojave, so at least half of our team are on that macOS version, that limits them to Xcode 11.3.1.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s also essential that we still execute our unit and UI tests on Mojave.&lt;/p&gt;
+&lt;p&gt;If we go back through the release notes for clues:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Xcode introduced an “Enable Testing Search Paths” build setting to improve support for test support frameworks and libraries. This build setting is on by default for test bundle targets, as well as for targets which explicitly include XCTest.framework in their “Link Binary With Libraries” list. Source files in such targets can now import XCTest without setting any custom search paths. (51117167)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://developer.apple.com/documentation/xcode-release-notes/xcode-11_4-release-notes&#34;&gt;Xcode 11.4 Release Notes&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;As an aside, I think of Xcode 11.4 as the &amp;lsquo;XCTest release&amp;rsquo;. It contains so many good things in there, many of which the &lt;a href=&#34;https://developer.apple.com/videos/developer-tools/testing&#34;&gt;WWDC &amp;lsquo;20 testing talks&lt;/a&gt; covered.&lt;/p&gt;
+&lt;p&gt;Anyway, to manually do the work of “Enable Testing Search Paths”, we need to add the following to the Build Settings:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SYSTEM_FRAMEWORK_SEARCH_PATHS = $(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/Library/Frameworks $(inherited)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;After that we should be good to go!&lt;/p&gt;
+</description>
+</item>
+    
+    <item>
+<title>Fix AVFoundation in Xcode 12 beta 3</title>
+<link>https://earltedly.github.io/posts/fix-avfoundation-in-xcode-12-beta3/</link>
+<pubDate>Fri, 24 Jul 2020 15:11:52 +0100</pubDate>
+      
+      <guid>https://earltedly.github.io/posts/fix-avfoundation-in-xcode-12-beta3/</guid>
+<description>&lt;p&gt;If you&amp;rsquo;re encountering the error &lt;code&gt;AVAudioSesson is unavailable on macOS&lt;/code&gt; on Xcode 12 beta 3, you can manually fix this as follows.&lt;/p&gt;
+&lt;p&gt;Look in &lt;em&gt;/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift/AVFoundation.swiftmodule&lt;/em&gt;. Open the files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;arm64e-apple-macos.swiftinterface&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x86_64-apple-macos.swiftinterface&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Change both occurrences of:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-swift&#34; data-lang=&#34;swift&#34;&gt;@available(iOS &lt;span style=&#34;color:#ae81ff&#34;&gt;7.0&lt;/span&gt;, watchOS &lt;span style=&#34;color:#ae81ff&#34;&gt;2.0&lt;/span&gt;, tvOS &lt;span style=&#34;color:#ae81ff&#34;&gt;9.0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;extension&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AVAudioSession&lt;/span&gt;.Location {
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;to:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-swift&#34; data-lang=&#34;swift&#34;&gt;@available(OSX, unavailable)
+@available(iOS &lt;span style=&#34;color:#ae81ff&#34;&gt;7.0&lt;/span&gt;, watchOS &lt;span style=&#34;color:#ae81ff&#34;&gt;2.0&lt;/span&gt;, tvOS &lt;span style=&#34;color:#ae81ff&#34;&gt;9.0&lt;/span&gt;, &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;extension&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AVAudioSession&lt;/span&gt;.Location {
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;m expecting there will be another beta soon which fixes this.cd ../..&lt;/p&gt;
+</description>
+</item>
     
   </channel>
 </rss>
