@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.74.3" />
+		<title>No Such Module XCTest &middot; Ted Bradley&#39;s Blog</title>
+		<link rel="shortcut icon" href="https://earltedly.github.io/images/favicon.ico">
+		<link rel="stylesheet" href="https://earltedly.github.io/css/style.css">
+		<link rel="stylesheet" href="https://earltedly.github.io/css/highlight.css">
+
+		
+		<link rel="stylesheet" href="https://earltedly.github.io/css/monosocialiconsfont.css">
+		
+
+		
+
+		
+		
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-173653162-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://earltedly.github.io/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://earltedly.github.io/posts'>Archive</a>
+	<a href='https://earltedly.github.io/tags'>Tags</a>
+	<a href='https://earltedly.github.io/about'>About</a>
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        No Such Module XCTest
+                    </h1>
+                    <h2 class="headline">
+                    Jul 30, 2020 11:30
+                    · 240 words
+                    · 2 minute read
+                      <span class="tags">
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <h1 id="framework-importing-xctest-not-building-pre-xcode-114">Framework importing XCTest not building pre-Xcode 11.4</h1>
+<p>I recently created a Framework which builds on top of XCTest to provide various XCUIApplication and XCUElement subclasses which model the structure of our app for usage in UI tests.</p>
+<p>Unfortunately, I ran into an issue once it hit our CI server. When compiling pre-Xcode 11.4, you get this error message:</p>
+<pre><code>No such module 'XCTest'
+	Failed to load module 'XCTest'
+</code></pre><p>We still support Mojave, so at least half of our team are on that macOS version, that limits them to Xcode 11.3.1.</p>
+<p>It&rsquo;s also essential that we still execute our unit and UI tests on Mojave.</p>
+<p>If we go back through the release notes for clues:</p>
+<blockquote>
+<p>Xcode introduced an “Enable Testing Search Paths” build setting to improve support for test support frameworks and libraries. This build setting is on by default for test bundle targets, as well as for targets which explicitly include XCTest.framework in their “Link Binary With Libraries” list. Source files in such targets can now import XCTest without setting any custom search paths. (51117167)</p>
+</blockquote>
+<p><a href="https://developer.apple.com/documentation/xcode-release-notes/xcode-11_4-release-notes">Xcode 11.4 Release Notes</a></p>
+<p>As an aside, I think of Xcode 11.4 as the &lsquo;XCTest release&rsquo;. It contains so many good things in there, many of which the <a href="https://developer.apple.com/videos/developer-tools/testing">WWDC &lsquo;20 testing talks</a> covered.</p>
+<p>Anyway, to manually do the work of “Enable Testing Search Paths”, we need to add the following to the Build Settings:</p>
+<pre><code>SYSTEM_FRAMEWORK_SEARCH_PATHS = $(DEVELOPER_DIR)/Platforms/MacOSX.platform/Developer/Library/Frameworks $(inherited)
+</code></pre><p>After that we should be good to go!</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://earltedly.github.io/js/jquery-3.3.1.min.js"></script>
+<script src="https://earltedly.github.io/js/main.js"></script>
+<script src="https://earltedly.github.io/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>

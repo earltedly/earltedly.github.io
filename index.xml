@@ -6,10 +6,21 @@
     <description>Recent content on Ted Bradley&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Fri, 24 Jul 2020 15:11:52 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 30 Jul 2020 11:30:35 +0100</lastBuildDate>
     
 	<atom:link href="https://earltedly.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>No Such Module XCTest</title>
+      <link>https://earltedly.github.io/posts/no-such-module-xctest/</link>
+      <pubDate>Thu, 30 Jul 2020 11:30:35 +0100</pubDate>
+      
+      <guid>https://earltedly.github.io/posts/no-such-module-xctest/</guid>
+      <description>Framework importing XCTest not building pre-Xcode 11.4 I recently created a Framework which builds on top of XCTest to provide various XCUIApplication and XCUElement subclasses which model the structure of our app for usage in UI tests.
+Unfortunately, I ran into an issue once it hit our CI server. When compiling pre-Xcode 11.4, you get this error message:
+No such module &#39;XCTest&#39; Failed to load module &#39;XCTest&#39; We still support Mojave, so at least half of our team are on that macOS version, that limits them to Xcode 11.</description>
+    </item>
     
     <item>
       <title>Fix AVFoundation in Xcode 12 beta 3</title>
